@@ -43,8 +43,9 @@ jobs:
             mingw-w64-clang-x86_64-zlib
       - name: Get upstream and apply patch
         run: |
-          git clone --branch 10.0.0 --recurse-submodules https://github.com/PrismLauncher/PrismLauncher.git upstream
+          git -c core.autocrlf=false clone --branch 10.0.0 --recurse-submodules https://github.com/PrismLauncher/PrismLauncher.git upstream
           cd upstream
+          sed -i 's/\r$//' ../patches/PrismLauncher-10.0.0-multi.patch
           git apply --check ../patches/PrismLauncher-10.0.0-multi.patch
           git apply ../patches/PrismLauncher-10.0.0-multi.patch
       - name: Build and install
