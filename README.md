@@ -4,6 +4,16 @@ An unofficial Windows build of [Prism Launcher 10.0.0](https://github.com/PrismL
 
 This is a patch-based project. It keeps the upstream source and this project's changes separate so you can review the changes and build the program yourself. It is not affiliated with the Prism Launcher team. The patch also allows creating offline accounts without first adding a Microsoft account.
 
+## What changed
+
+The complete source changes are in [one patch](patches/PrismLauncher-10.0.0-multi.patch) against the official 10.0.0 tag. The patch changes six files:
+
+- `MainWindow.cpp`: keeps **Launch** available while an instance runs, asks for an account or nickname, then starts another copy.
+- `Prism Multi.ps1` and `CMakeLists.txt`: copy the instance into a separate data folder and include the helper in Windows builds. The helper uses PowerShell only for this launch; it does not change the computer's permanent execution policy.
+- `Application.cpp`, `MinecraftAccount.h`, and `AccountListPage.cpp`: allow creating and using offline accounts without first adding a Microsoft account.
+
+The repository contains the patch, license, build workflow, and this guide. GitHub downloads the unmodified upstream source during the build and applies the visible patch. You can inspect every changed line before running anything.
+
 ## How it works
 
 1. Start an instance as usual.
@@ -18,6 +28,10 @@ Each extra process gets its own instance files and settings under `PrismLauncher
 Download the Windows ZIP from [Releases](../../releases), extract it, close Prism Launcher, and run `prismlauncher.exe` from the extracted folder. To retain your existing instances and accounts, use your existing Prism Launcher data folder (the usual Windows location is `%APPDATA%\PrismLauncher`). **Back up that folder before switching builds.** Do not copy or publish `accounts.json` or instance data with this project.
 
 This project does not distribute account data or bundle a bypass server. Offline accounts only work where the game or server accepts them. Microsoft account sign-in depends on your own client ID when building (see below).
+
+### Verify the download
+
+SHA-256 of the first Windows ZIP (`v10.0.0-multi.1`): `3bc04e6b40fd555b82ccba05d534bb3e81b6f04d0ef12f41b6803bf73e94d16e`. In PowerShell, run `Get-FileHash .\PrismLauncher-Multi-Windows.zip -Algorithm SHA256` and compare the result. This checks that the downloaded file matches the published archive; it is not a code-signing certificate or a proof that the binary was built from the patch. The ZIP is unsigned. For the strongest check, review the patch and build it yourself using the workflow below.
 
 ## Build from source
 
